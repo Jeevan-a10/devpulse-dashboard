@@ -1,8 +1,5 @@
-import { Geist } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
-
-const geist = Geist({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'DevPulse Dashboard',
@@ -12,7 +9,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${geist.className} bg-slate-50 min-h-screen antialiased`}>
+      <body className="font-sans bg-slate-50 min-h-screen antialiased">
         <AuthProvider>
           {children}
         </AuthProvider>
@@ -20,3 +17,4 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
