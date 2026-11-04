@@ -15,25 +15,28 @@ const INITIAL_FORM = {
   dueDate: '',
 };
 
-export default function TaskForm({ onSubmit, onClose, initialData = null }) {
+export default function TaskForm({ onSubmit, onClose, initialData = null, defaultValues = null }) {
   const [form, setForm] = useState(INITIAL_FORM);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Populate form for edit mode
+  // Populate form for edit mode or pre-filled new task
   useEffect(() => {
-    if (initialData) {
+    const data = initialData || defaultValues;
+    if (data) {
       setForm({
-        title: initialData.title || '',
-        description: initialData.description || '',
-        category: initialData.category || 'General',
-        status: initialData.status || 'pending',
-        priority: initialData.priority || 'medium',
-        tags: (initialData.tags || []).join(', '),
-        dueDate: initialData.dueDate ? initialData.dueDate.slice(0, 10) : '',
+        title: data.title || '',
+        description: data.description || '',
+        category: data.category || 'General',
+        status: data.status || 'pending',
+        priority: data.priority || 'medium',
+        tags: Array.isArray(data.tags) ? data.tags.join(', ') : (data.tags || ''),
+        dueDate: data.dueDate ? data.dueDate.slice(0, 10) : '',
       });
+    } else {
+      setForm(INITIAL_FORM);
     }
-  }, [initialData]);
+  }, [initialData, defaultValues]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

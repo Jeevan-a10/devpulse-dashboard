@@ -30,6 +30,7 @@ export default function DashboardPage() {
   const [apiStatus, setApiStatus] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
+  const [formDefaultValues, setFormDefaultValues] = useState(null);
   const [toast, setToast] = useState(null);
 
   // Auto-Demo state for automated recording walkthrough
@@ -172,12 +173,14 @@ export default function DashboardPage() {
 
   const handleEditTask = (task) => {
     setEditingTask(task);
+    setFormDefaultValues(null);
     setShowForm(true);
   };
 
   const handleFormClose = () => {
     setShowForm(false);
     setEditingTask(null);
+    setFormDefaultValues(null);
   };
 
   // Milestone actions
@@ -220,6 +223,8 @@ export default function DashboardPage() {
     demoTimers.current.forEach(clearTimeout);
     demoTimers.current = [];
     setShowForm(false);
+    setEditingTask(null);
+    setFormDefaultValues(null);
     setDemoState({ running: false, countdown: null, step: '', stepNum: 0, totalSteps: 5 });
   }, []);
 
@@ -252,8 +257,52 @@ export default function DashboardPage() {
       setActiveTab('tasks');
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      // Step 2: Smoothly scroll to tasks and cycle status
-      const t1 = setTimeout(async () => {
+      // Step 2: Visibly click "+ New Task" and open the Add Task modal ("➕ New Task" / "Create Task")
+      const t1 = setTimeout(() => {
+        setDemoState((s) => ({ ...s, step: 'Adding a New Task: Cloud Deployment', stepNum: 2 }));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        const btn = document.getElementById('new-task-btn');
+        if (btn) btn.classList.add('ring-4', 'ring-indigo-300', 'scale-105');
+
+        setTimeout(() => {
+          if (btn) btn.classList.remove('ring-4', 'ring-indigo-300', 'scale-105');
+          setEditingTask(null);
+          setFormDefaultValues({
+            title: 'Deploy to Vercel & MongoDB Atlas',
+            description: 'Production cloud setup with custom domain and DB cluster',
+            category: 'DevOps',
+            priority: 'high',
+            status: 'in-progress',
+            tags: 'cloud, vercel, mongodb',
+          });
+          setShowForm(true);
+        }, 500);
+
+        // Keep Add Task modal visibly open for 3.5 seconds, then submit and close
+        const t1b = setTimeout(async () => {
+          await handleCreateTask({
+            title: 'Deploy to Vercel & MongoDB Atlas',
+            description: 'Production cloud setup with custom domain and DB cluster',
+            category: 'DevOps',
+            priority: 'high',
+            status: 'in-progress',
+            tags: ['cloud', 'vercel', 'mongodb'],
+          });
+          setShowForm(false);
+          setFormDefaultValues(null);
+
+          setTimeout(() => {
+            const list = document.getElementById('task-list-section');
+            if (list) list.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 400);
+        }, 4000);
+        demoTimers.current.push(t1b);
+      }, 2500);
+
+      // Step 3: Cycle status of an existing task
+      const t2 = setTimeout(async () => {
+        setDemoState((s) => ({ ...s, step: 'Updating Task Status & Details', stepNum: 3 }));
         const listEl = document.getElementById('task-list-section');
         if (listEl) listEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
@@ -267,43 +316,12 @@ export default function DashboardPage() {
               setTimeout(() => cardEl.classList.remove('ring-2', 'ring-indigo-500'), 1500);
             }
           }
-        }, 1200);
-      }, 2500);
+        }, 800);
+      }, 8500);
 
-      // Step 3: Visibly open New Task Modal on screen!
-      const t2 = setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setEditingTask({
-          title: 'Deploy to Vercel & MongoDB Atlas',
-          description: 'Production cloud setup with custom domain and DB cluster',
-          category: 'DevOps',
-          priority: 'high',
-          status: 'in-progress',
-        });
-        setShowForm(true);
-
-        // Keep modal visibly open for 3.5 seconds, then submit and close
-        const t2b = setTimeout(async () => {
-          await handleCreateTask({
-            title: 'Deploy to Vercel & MongoDB Atlas',
-            description: 'Production cloud setup with custom domain and DB cluster',
-            category: 'DevOps',
-            priority: 'high',
-            status: 'in-progress',
-          });
-          setShowForm(false);
-          setEditingTask(null);
-
-          setTimeout(() => {
-            const list = document.getElementById('task-list-section');
-            if (list) list.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }, 400);
-        }, 3500);
-        demoTimers.current.push(t2b);
-      }, 7000);
-
-      // Step 4: Switch to Milestones Tab and scroll to view
+      // Step 4: Switch to Milestones Tab and update milestone progress
       const t3 = setTimeout(async () => {
+        setDemoState((s) => ({ ...s, step: 'Sprint Milestones & Roadmap', stepNum: 4 }));
         setActiveTab('milestones');
         setTimeout(() => {
           const mSection = document.getElementById('milestones-section');
@@ -318,18 +336,19 @@ export default function DashboardPage() {
               progress: 100,
             });
           }
-        }, 3000);
+        }, 2500);
         demoTimers.current.push(t3b);
-      }, 15000);
+      }, 13500);
 
-      // Step 5: Switch to Activity Stream Tab and scroll to view
+      // Step 5: Switch to Activity Stream Tab showing recent logs
       const t4 = setTimeout(() => {
+        setDemoState((s) => ({ ...s, step: 'Real-time Activity Stream & Audit Log', stepNum: 5 }));
         setActiveTab('activity');
         setTimeout(() => {
           const aSection = document.getElementById('activity-section');
           if (aSection) aSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 300);
-      }, 23000);
+      }, 19500);
 
       // Step 6: Return to Tasks Overview and Finish
       const t5 = setTimeout(() => {
@@ -339,7 +358,7 @@ export default function DashboardPage() {
           stopAutoDemo();
         }, 3000);
         demoTimers.current.push(t6);
-      }, 29000);
+      }, 25500);
 
       demoTimers.current.push(t1, t2, t3, t4, t5);
     }, 3000);
@@ -390,7 +409,8 @@ export default function DashboardPage() {
 
           {/* New Task Button */}
           <button
-            onClick={() => { setEditingTask(null); setShowForm(true); }}
+            id="new-task-btn"
+            onClick={() => { setEditingTask(null); setFormDefaultValues(null); setShowForm(true); }}
             className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm"
           >
             + New Task
@@ -488,6 +508,7 @@ export default function DashboardPage() {
           onSubmit={editingTask ? handleUpdateTask : handleCreateTask}
           onClose={handleFormClose}
           initialData={editingTask}
+          defaultValues={formDefaultValues}
         />
       )}
 
