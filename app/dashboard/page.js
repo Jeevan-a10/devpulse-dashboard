@@ -319,41 +319,28 @@ export default function DashboardPage() {
     demoTimers.current.push(c1, c2, c3);
   }, [stopAutoDemo, tasks, milestones, handleStatusChange, handleCreateTask, handleUpdateMilestone]);
 
-  // Escape key to stop demo
+  // Escape key to stop demo, Shift+D to start silently
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && demoState.running) {
         stopAutoDemo();
       }
+      if (e.shiftKey && (e.key === 'D' || e.key === 'd') && !demoState.running) {
+        startAutoDemo();
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [demoState.running, stopAutoDemo]);
+  }, [demoState.running, stopAutoDemo, startAutoDemo]);
 
   return (
     <div className="space-y-6">
-      {/* Active Recording Assistant Banner */}
-      {demoState.running && (
-        <div className="fixed top-3 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 backdrop-blur-md text-white px-5 py-2.5 rounded-full shadow-2xl border border-indigo-500/50 flex items-center gap-3 text-sm animate-pulse">
-          <span className="flex h-3 w-3 relative">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+      {/* 3-second Countdown Banner (Only visible during countdown, completely hidden during recording) */}
+      {demoState.countdown && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 backdrop-blur-md text-white px-6 py-2.5 rounded-full shadow-2xl border border-indigo-500/50 flex items-center gap-3 text-sm animate-bounce">
+          <span className="font-bold text-amber-300">
+            🎬 Auto-Demo starting in {demoState.countdown}... Press Record!
           </span>
-          {demoState.countdown ? (
-            <span className="font-bold text-amber-300">
-              Get Ready! Auto Demo starts in {demoState.countdown}...
-            </span>
-          ) : (
-            <span>
-              <strong className="text-indigo-400">Step {demoState.stepNum}/{demoState.totalSteps}:</strong> {demoState.step}
-            </span>
-          )}
-          <button
-            onClick={stopAutoDemo}
-            className="ml-2 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md border border-slate-700 font-medium"
-          >
-            Stop [Esc]
-          </button>
         </div>
       )}
 
@@ -382,15 +369,16 @@ export default function DashboardPage() {
             </span>
           )}
 
-          {/* Auto-Run Demo Button */}
-          <button
-            onClick={startAutoDemo}
-            disabled={demoState.running}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors shadow-sm flex items-center gap-1.5"
-            title="Automatically drives the entire 30-second walkthrough so you can record smoothly"
-          >
-            <span>▶</span> {demoState.running ? 'Auto-Running...' : 'Auto-Run Demo (30s)'}
-          </button>
+          {/* Auto-Run Demo Button: COMPLETELY HIDDEN during recording */}
+          {!demoState.running && (
+            <button
+              onClick={startAutoDemo}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors shadow-sm flex items-center gap-1.5"
+              title="Click or press Shift+D to automatically drive the demo. Button hides automatically during recording."
+            >
+              <span>▶</span> Auto-Run Demo (30s)
+            </button>
+          )}
 
           {/* New Task Button */}
           <button
