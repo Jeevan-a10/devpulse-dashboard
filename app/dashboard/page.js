@@ -335,15 +335,6 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* 3-second Countdown Banner (Only visible during countdown, completely hidden during recording) */}
-      {demoState.countdown && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 backdrop-blur-md text-white px-6 py-2.5 rounded-full shadow-2xl border border-indigo-500/50 flex items-center gap-3 text-sm animate-bounce">
-          <span className="font-bold text-amber-300">
-            🎬 Auto-Demo starting in {demoState.countdown}... Press Record!
-          </span>
-        </div>
-      )}
-
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
@@ -367,17 +358,6 @@ export default function DashboardPage() {
             }`}>
               {apiStatus === 'online' ? '🟢' : apiStatus === 'offline' ? '🔴' : '🟡'} API {apiStatus}
             </span>
-          )}
-
-          {/* Auto-Run Demo Button: COMPLETELY HIDDEN during recording */}
-          {!demoState.running && (
-            <button
-              onClick={startAutoDemo}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors shadow-sm flex items-center gap-1.5"
-              title="Click or press Shift+D to automatically drive the demo. Button hides automatically during recording."
-            >
-              <span>▶</span> Auto-Run Demo (30s)
-            </button>
           )}
 
           {/* New Task Button */}
