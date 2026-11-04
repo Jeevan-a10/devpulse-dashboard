@@ -9,7 +9,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="font-sans bg-slate-50 min-h-screen antialiased">
+      <head>
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+      </head>
+      <body className="font-sans bg-slate-50 min-h-screen antialiased text-slate-800">
         <AuthProvider>
           {children}
         </AuthProvider>
@@ -17,4 +20,3 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
-
