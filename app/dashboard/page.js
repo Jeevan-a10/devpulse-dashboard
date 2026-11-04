@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { tasksAPI, healthAPI, milestonesAPI, activityAPI } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
@@ -31,6 +31,16 @@ export default function DashboardPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [toast, setToast] = useState(null);
+
+  // Auto-Demo state for automated recording walkthrough
+  const [demoState, setDemoState] = useState({
+    running: false,
+    countdown: null,
+    step: '',
+    stepNum: 0,
+    totalSteps: 5,
+  });
+  const demoTimers = useRef([]);
 
   const showToast = (msg, type = 'success') => {
     setToast({ msg, type });
@@ -114,23 +124,23 @@ export default function DashboardPage() {
   }, [fetchTasks, fetchStats, fetchMilestones, fetchActivity, checkHealth]);
 
   // Task actions
-  const handleCreateTask = async (payload) => {
+  const handleCreateTask = useCallback(async (payload) => {
     await tasksAPI.create(payload);
     showToast('Task created successfully! 🎉');
     fetchTasks();
     fetchStats();
     fetchActivity();
-  };
+  }, [fetchTasks, fetchStats, fetchActivity]);
 
-  const handleUpdateTask = async (payload) => {
+  const handleUpdateTask = useCallback(async (payload) => {
     await tasksAPI.update(editingTask._id || editingTask.id, payload);
     showToast('Task updated! ✅');
     fetchTasks();
     fetchStats();
     fetchActivity();
-  };
+  }, [editingTask, fetchTasks, fetchStats, fetchActivity]);
 
-  const handleStatusChange = async (id, newStatus) => {
+  const handleStatusChange = useCallback(async (id, newStatus) => {
     try {
       await tasksAPI.update(id, { status: newStatus });
       setTasks((prev) =>
@@ -145,9 +155,9 @@ export default function DashboardPage() {
     } catch {
       showToast('Failed to update task status.', 'error');
     }
-  };
+  }, [fetchStats, fetchActivity]);
 
-  const handleDeleteTask = async (id) => {
+  const handleDeleteTask = useCallback(async (id) => {
     if (!confirm('Delete this task? This cannot be undone.')) return;
     try {
       await tasksAPI.delete(id);
@@ -158,7 +168,7 @@ export default function DashboardPage() {
     } catch {
       showToast('Failed to delete task.', 'error');
     }
-  };
+  }, [fetchStats, fetchActivity]);
 
   const handleEditTask = (task) => {
     setEditingTask(task);
@@ -171,7 +181,7 @@ export default function DashboardPage() {
   };
 
   // Milestone actions
-  const handleCreateMilestone = async (payload) => {
+  const handleCreateMilestone = useCallback(async (payload) => {
     try {
       await milestonesAPI.create(payload);
       showToast('Milestone created! 🎯');
@@ -180,9 +190,9 @@ export default function DashboardPage() {
     } catch {
       showToast('Failed to create milestone.', 'error');
     }
-  };
+  }, [fetchMilestones, fetchActivity]);
 
-  const handleUpdateMilestone = async (id, payload) => {
+  const handleUpdateMilestone = useCallback(async (id, payload) => {
     try {
       await milestonesAPI.update(id, payload);
       showToast('Milestone updated! ✅');
@@ -191,9 +201,9 @@ export default function DashboardPage() {
     } catch {
       showToast('Failed to update milestone.', 'error');
     }
-  };
+  }, [fetchMilestones, fetchActivity]);
 
-  const handleDeleteMilestone = async (id) => {
+  const handleDeleteMilestone = useCallback(async (id) => {
     if (!confirm('Delete this milestone? This cannot be undone.')) return;
     try {
       await milestonesAPI.delete(id);
@@ -203,10 +213,150 @@ export default function DashboardPage() {
     } catch {
       showToast('Failed to remove milestone.', 'error');
     }
-  };
+  }, [fetchActivity]);
+
+  // ── Auto Demo Playback Controller ──────────────────────────────────────────
+  const stopAutoDemo = useCallback(() => {
+    demoTimers.current.forEach(clearTimeout);
+    demoTimers.current = [];
+    setShowForm(false);
+    setDemoState({ running: false, countdown: null, step: '', stepNum: 0, totalSteps: 5 });
+  }, []);
+
+  const startAutoDemo = useCallback(() => {
+    stopAutoDemo();
+    setDemoState({
+      running: true,
+      countdown: 3,
+      step: 'Get ready! Recording starts in 3...',
+      stepNum: 0,
+      totalSteps: 5,
+    });
+
+    const c1 = setTimeout(() => {
+      setDemoState((s) => ({ ...s, countdown: 2, step: 'Get ready! Recording starts in 2...' }));
+    }, 1000);
+
+    const c2 = setTimeout(() => {
+      setDemoState((s) => ({ ...s, countdown: 1, step: 'Get ready! Recording starts in 1...' }));
+    }, 2000);
+
+    const c3 = setTimeout(() => {
+      setDemoState({
+        running: true,
+        countdown: null,
+        step: 'Overview & Task Backlog',
+        stepNum: 1,
+        totalSteps: 5,
+      });
+      setActiveTab('tasks');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Step 2: Cycle first task status
+      const t1 = setTimeout(async () => {
+        setDemoState((s) => ({ ...s, step: 'Cycling task status (Pending → Completed)', stepNum: 2 }));
+        if (tasks.length > 0) {
+          const firstTask = tasks[0];
+          await handleStatusChange(firstTask._id || firstTask.id, 'completed');
+        }
+      }, 4000);
+
+      // Step 3: Automatically create a new task
+      const t2 = setTimeout(async () => {
+        setDemoState((s) => ({ ...s, step: 'Creating new task: Deploy to Vercel & Atlas', stepNum: 3 }));
+        await handleCreateTask({
+          title: 'Deploy to Vercel & MongoDB Atlas',
+          category: 'DevOps',
+          priority: 'high',
+          status: 'in-progress',
+          dueDate: new Date(Date.now() + 86400000 * 2).toISOString(),
+        });
+      }, 10000);
+
+      // Step 4: Switch to Milestones Tab and complete a milestone
+      const t3 = setTimeout(async () => {
+        setDemoState((s) => ({ ...s, step: 'Milestones & Roadmap Progress', stepNum: 4 }));
+        setActiveTab('milestones');
+        window.scrollTo({ top: 120, behavior: 'smooth' });
+
+        const t3b = setTimeout(async () => {
+          if (milestones.length > 0) {
+            const activeMilestone = milestones.find((m) => m.status !== 'completed') || milestones[0];
+            await handleUpdateMilestone(activeMilestone._id || activeMilestone.id, {
+              status: 'completed',
+              progress: 100,
+            });
+          }
+        }, 3000);
+        demoTimers.current.push(t3b);
+      }, 17000);
+
+      // Step 5: Switch to Activity Stream
+      const t4 = setTimeout(() => {
+        setDemoState((s) => ({ ...s, step: 'Real-Time Developer Activity Audit Stream', stepNum: 5 }));
+        setActiveTab('activity');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 25000);
+
+      // Step 6: Finish Demo
+      const t5 = setTimeout(() => {
+        setDemoState({
+          running: true,
+          countdown: null,
+          step: '✨ Demo Complete! Hit Stop Recording now (Cmd + Ctrl + Esc)',
+          stepNum: 5,
+          totalSteps: 5,
+        });
+        const t6 = setTimeout(() => {
+          stopAutoDemo();
+        }, 5000);
+        demoTimers.current.push(t6);
+      }, 32000);
+
+      demoTimers.current.push(t1, t2, t3, t4, t5);
+    }, 3000);
+
+    demoTimers.current.push(c1, c2, c3);
+  }, [stopAutoDemo, tasks, milestones, handleStatusChange, handleCreateTask, handleUpdateMilestone]);
+
+  // Escape key to stop demo
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && demoState.running) {
+        stopAutoDemo();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [demoState.running, stopAutoDemo]);
 
   return (
     <div className="space-y-6">
+      {/* Active Recording Assistant Banner */}
+      {demoState.running && (
+        <div className="fixed top-3 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 backdrop-blur-md text-white px-5 py-2.5 rounded-full shadow-2xl border border-indigo-500/50 flex items-center gap-3 text-sm animate-pulse">
+          <span className="flex h-3 w-3 relative">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+          </span>
+          {demoState.countdown ? (
+            <span className="font-bold text-amber-300">
+              Get Ready! Auto Demo starts in {demoState.countdown}...
+            </span>
+          ) : (
+            <span>
+              <strong className="text-indigo-400">Step {demoState.stepNum}/{demoState.totalSteps}:</strong> {demoState.step}
+            </span>
+          )}
+          <button
+            onClick={stopAutoDemo}
+            className="ml-2 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md border border-slate-700 font-medium"
+          >
+            Stop [Esc]
+          </button>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
@@ -218,7 +368,7 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           {/* API Status Badge */}
           {apiStatus && (
             <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${
@@ -232,6 +382,17 @@ export default function DashboardPage() {
             </span>
           )}
 
+          {/* Auto-Run Demo Button */}
+          <button
+            onClick={startAutoDemo}
+            disabled={demoState.running}
+            className="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors shadow-sm flex items-center gap-1.5"
+            title="Automatically drives the entire 30-second walkthrough so you can record smoothly"
+          >
+            <span>▶</span> {demoState.running ? 'Auto-Running...' : 'Auto-Run Demo (30s)'}
+          </button>
+
+          {/* New Task Button */}
           <button
             onClick={() => { setEditingTask(null); setShowForm(true); }}
             className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm"
