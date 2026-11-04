@@ -252,32 +252,63 @@ export default function DashboardPage() {
       setActiveTab('tasks');
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      // Step 2: Cycle first task status
+      // Step 2: Smoothly scroll to tasks and cycle status
       const t1 = setTimeout(async () => {
-        setDemoState((s) => ({ ...s, step: 'Cycling task status (Pending → Completed)', stepNum: 2 }));
-        if (tasks.length > 0) {
-          const firstTask = tasks[0];
-          await handleStatusChange(firstTask._id || firstTask.id, 'completed');
-        }
-      }, 4000);
+        const listEl = document.getElementById('task-list-section');
+        if (listEl) listEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-      // Step 3: Automatically create a new task
-      const t2 = setTimeout(async () => {
-        setDemoState((s) => ({ ...s, step: 'Creating new task: Deploy to Vercel & Atlas', stepNum: 3 }));
-        await handleCreateTask({
+        setTimeout(async () => {
+          if (tasks.length > 0) {
+            const targetTask = tasks.find((t) => t.status !== 'completed') || tasks[0];
+            const cardEl = document.getElementById(`task-card-${targetTask._id || targetTask.id}`);
+            if (cardEl) cardEl.classList.add('ring-2', 'ring-indigo-500');
+            await handleStatusChange(targetTask._id || targetTask.id, 'completed');
+            if (cardEl) {
+              setTimeout(() => cardEl.classList.remove('ring-2', 'ring-indigo-500'), 1500);
+            }
+          }
+        }, 1200);
+      }, 2500);
+
+      // Step 3: Visibly open New Task Modal on screen!
+      const t2 = setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setEditingTask({
           title: 'Deploy to Vercel & MongoDB Atlas',
+          description: 'Production cloud setup with custom domain and DB cluster',
           category: 'DevOps',
           priority: 'high',
           status: 'in-progress',
-          dueDate: new Date(Date.now() + 86400000 * 2).toISOString(),
         });
-      }, 10000);
+        setShowForm(true);
 
-      // Step 4: Switch to Milestones Tab and complete a milestone
+        // Keep modal visibly open for 3.5 seconds, then submit and close
+        const t2b = setTimeout(async () => {
+          await handleCreateTask({
+            title: 'Deploy to Vercel & MongoDB Atlas',
+            description: 'Production cloud setup with custom domain and DB cluster',
+            category: 'DevOps',
+            priority: 'high',
+            status: 'in-progress',
+          });
+          setShowForm(false);
+          setEditingTask(null);
+
+          setTimeout(() => {
+            const list = document.getElementById('task-list-section');
+            if (list) list.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 400);
+        }, 3500);
+        demoTimers.current.push(t2b);
+      }, 7000);
+
+      // Step 4: Switch to Milestones Tab and scroll to view
       const t3 = setTimeout(async () => {
-        setDemoState((s) => ({ ...s, step: 'Milestones & Roadmap Progress', stepNum: 4 }));
         setActiveTab('milestones');
-        window.scrollTo({ top: 120, behavior: 'smooth' });
+        setTimeout(() => {
+          const mSection = document.getElementById('milestones-section');
+          if (mSection) mSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
 
         const t3b = setTimeout(async () => {
           if (milestones.length > 0) {
@@ -289,29 +320,26 @@ export default function DashboardPage() {
           }
         }, 3000);
         demoTimers.current.push(t3b);
-      }, 17000);
+      }, 15000);
 
-      // Step 5: Switch to Activity Stream
+      // Step 5: Switch to Activity Stream Tab and scroll to view
       const t4 = setTimeout(() => {
-        setDemoState((s) => ({ ...s, step: 'Real-Time Developer Activity Audit Stream', stepNum: 5 }));
         setActiveTab('activity');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 25000);
+        setTimeout(() => {
+          const aSection = document.getElementById('activity-section');
+          if (aSection) aSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      }, 23000);
 
-      // Step 6: Finish Demo
+      // Step 6: Return to Tasks Overview and Finish
       const t5 = setTimeout(() => {
-        setDemoState({
-          running: true,
-          countdown: null,
-          step: '✨ Demo Complete! Hit Stop Recording now (Cmd + Ctrl + Esc)',
-          stepNum: 5,
-          totalSteps: 5,
-        });
+        setActiveTab('tasks');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         const t6 = setTimeout(() => {
           stopAutoDemo();
-        }, 5000);
+        }, 3000);
         demoTimers.current.push(t6);
-      }, 32000);
+      }, 29000);
 
       demoTimers.current.push(t1, t2, t3, t4, t5);
     }, 3000);

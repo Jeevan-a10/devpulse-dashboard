@@ -29,7 +29,7 @@ export default function TaskList({ tasks, onStatusChange, onDelete, onEdit, load
   }
 
   return (
-    <div className="space-y-4">
+    <div id="task-list-section" className="space-y-4">
       {/* Search + Filters */}
       <div className="bg-white border border-slate-200 rounded-xl p-4 space-y-3">
         {/* Search */}

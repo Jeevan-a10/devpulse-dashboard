@@ -42,7 +42,7 @@ export default function TaskCard({ task, onStatusChange, onDelete, onEdit }) {
   };
 
   return (
-    <div className={`bg-white border rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow ${task.status === 'completed' ? 'opacity-75' : ''}`}>
+    <div id={`task-card-${task._id || task.id}`} className={`bg-white border rounded-xl p-4 shadow-sm hover:shadow-md transition-all ${task.status === 'completed' ? 'opacity-75' : ''}`}>
       <div className="flex items-start justify-between gap-2">
         {/* Title + Description */}
         <div className="flex-1 min-w-0">

@@ -55,7 +55,7 @@ export default function MilestonesPanel({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-6">
+    <div id="milestones-section" className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">

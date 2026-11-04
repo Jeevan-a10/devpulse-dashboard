@@ -33,7 +33,7 @@ export default function ActivityFeed({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-4">
+    <div id="activity-section" className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
