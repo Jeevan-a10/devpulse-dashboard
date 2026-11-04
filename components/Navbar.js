@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import Logo from '@/components/Logo';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -22,9 +23,8 @@ export default function Navbar() {
     <nav className="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/dashboard" className="flex items-center gap-2">
-          <span className="text-2xl">⚡</span>
-          <span className="font-bold text-xl text-slate-800">DevPulse</span>
+        <Link href="/dashboard" className="hover:opacity-95 transition-opacity">
+          <Logo size="md" />
         </Link>
 
         {/* Nav Links */}

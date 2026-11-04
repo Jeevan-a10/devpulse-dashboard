@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
+import Logo from '@/components/Logo';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -32,10 +33,9 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-slate-100 p-4">
       <div className="w-full max-w-sm">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <span className="text-5xl">⚡</span>
-          <h1 className="text-2xl font-bold text-slate-800 mt-2">DevPulse</h1>
-          <p className="text-sm text-slate-500 mt-1">Sign in to your workspace</p>
+        <div className="flex flex-col items-center justify-center mb-8">
+          <Logo size="lg" withText={true} />
+          <p className="text-sm text-slate-500 mt-2">Sign in to your workspace</p>
         </div>
 
         {/* Card */}
