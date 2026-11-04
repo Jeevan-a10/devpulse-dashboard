@@ -279,7 +279,7 @@ export default function DashboardPage() {
           setShowForm(true);
         }, 500);
 
-        // Keep Add Task modal visibly open for 3.5 seconds, then submit and close
+        // Keep Add Task modal visibly open for 3 seconds, then submit and close
         const t1b = setTimeout(async () => {
           await handleCreateTask({
             title: 'Deploy to Vercel & MongoDB Atlas',
@@ -296,28 +296,66 @@ export default function DashboardPage() {
             const list = document.getElementById('task-list-section');
             if (list) list.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }, 400);
-        }, 4000);
+        }, 3500);
         demoTimers.current.push(t1b);
       }, 2500);
 
-      // Step 3: Cycle status of an existing task
+      // Step 3: Visibly open the Edit Task modal on an existing task ("✏️ Edit Task" / "Update Task")
       const t2 = setTimeout(async () => {
-        setDemoState((s) => ({ ...s, step: 'Updating Task Status & Details', stepNum: 3 }));
+        setDemoState((s) => ({ ...s, step: 'Editing Task: Elevating Priority to Urgent', stepNum: 3 }));
         const listEl = document.getElementById('task-list-section');
         if (listEl) listEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-        setTimeout(async () => {
-          if (tasks.length > 0) {
-            const targetTask = tasks.find((t) => t.status !== 'completed') || tasks[0];
-            const cardEl = document.getElementById(`task-card-${targetTask._id || targetTask.id}`);
-            if (cardEl) cardEl.classList.add('ring-2', 'ring-indigo-500');
-            await handleStatusChange(targetTask._id || targetTask.id, 'completed');
-            if (cardEl) {
-              setTimeout(() => cardEl.classList.remove('ring-2', 'ring-indigo-500'), 1500);
-            }
-          }
-        }, 800);
-      }, 8500);
+        const targetTask = tasks.find((t) => t.status !== 'completed') || tasks[0];
+        if (targetTask) {
+          const cardEl = document.getElementById(`task-card-${targetTask._id || targetTask.id}`);
+          if (cardEl) cardEl.classList.add('ring-2', 'ring-indigo-500');
+
+          setTimeout(() => {
+            if (cardEl) cardEl.classList.remove('ring-2', 'ring-indigo-500');
+            // Visibly open Edit Modal on screen!
+            setFormDefaultValues(null);
+            setEditingTask({
+              ...targetTask,
+              priority: 'urgent',
+              status: 'completed',
+            });
+            setShowForm(true);
+
+            // Keep Edit modal visibly open for 3 seconds, then save
+            const t2b = setTimeout(async () => {
+              try {
+                await tasksAPI.update(targetTask._id || targetTask.id, {
+                  title: targetTask.title,
+                  description: targetTask.description,
+                  category: targetTask.category,
+                  priority: 'urgent',
+                  status: 'completed',
+                  tags: targetTask.tags || [],
+                });
+                showToast('Task updated! ✅');
+                fetchTasks();
+                fetchStats();
+                fetchActivity();
+              } catch {
+                // ignore
+              }
+              setShowForm(false);
+              setEditingTask(null);
+
+              setTimeout(() => {
+                const updatedCard = document.getElementById(`task-card-${targetTask._id || targetTask.id}`);
+                if (updatedCard) {
+                  updatedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  updatedCard.classList.add('ring-2', 'ring-green-500');
+                  setTimeout(() => updatedCard.classList.remove('ring-2', 'ring-green-500'), 1500);
+                }
+              }, 300);
+            }, 3000);
+            demoTimers.current.push(t2b);
+          }, 600);
+        }
+      }, 7200);
 
       // Step 4: Switch to Milestones Tab and update milestone progress
       const t3 = setTimeout(async () => {
@@ -338,7 +376,7 @@ export default function DashboardPage() {
           }
         }, 2500);
         demoTimers.current.push(t3b);
-      }, 13500);
+      }, 12500);
 
       // Step 5: Switch to Activity Stream Tab showing recent logs
       const t4 = setTimeout(() => {
@@ -348,7 +386,7 @@ export default function DashboardPage() {
           const aSection = document.getElementById('activity-section');
           if (aSection) aSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 300);
-      }, 19500);
+      }, 18500);
 
       // Step 6: Return to Tasks Overview and Finish
       const t5 = setTimeout(() => {
@@ -358,13 +396,13 @@ export default function DashboardPage() {
           stopAutoDemo();
         }, 3000);
         demoTimers.current.push(t6);
-      }, 25500);
+      }, 24500);
 
       demoTimers.current.push(t1, t2, t3, t4, t5);
     }, 3000);
 
     demoTimers.current.push(c1, c2, c3);
-  }, [stopAutoDemo, tasks, milestones, handleStatusChange, handleCreateTask, handleUpdateMilestone]);
+  }, [stopAutoDemo, tasks, milestones, handleStatusChange, handleCreateTask, handleUpdateMilestone, fetchTasks, fetchStats, fetchActivity]);
 
   // Escape key to stop demo, Shift+D to start silently
   useEffect(() => {
