@@ -37,7 +37,7 @@ export default function DashboardPage() {
     setTimeout(() => setToast(null), 3000);
   };
 
-  // ── Fetch Tasks ─────────────────────────────────────────────────────────────
+  // Load tasks
   const fetchTasks = useCallback(async () => {
     setTasksLoading(true);
     try {
@@ -52,7 +52,7 @@ export default function DashboardPage() {
     }
   }, [isMyTasks]);
 
-  // ── Fetch Stats ──────────────────────────────────────────────────────────────
+  // Load stats
   const fetchStats = useCallback(async () => {
     setStatsLoading(true);
     try {
@@ -65,7 +65,7 @@ export default function DashboardPage() {
     }
   }, []);
 
-  // ── Fetch Milestones ─────────────────────────────────────────────────────────
+  // Load milestones
   const fetchMilestones = useCallback(async () => {
     setMilestonesLoading(true);
     try {
@@ -78,7 +78,7 @@ export default function DashboardPage() {
     }
   }, []);
 
-  // ── Fetch Activity ───────────────────────────────────────────────────────────
+  // Load activity feed
   const fetchActivity = useCallback(async () => {
     setActivityLoading(true);
     try {
@@ -95,7 +95,7 @@ export default function DashboardPage() {
     }
   }, []);
 
-  // ── Health Check ─────────────────────────────────────────────────────────────
+  // Server health check
   const checkHealth = useCallback(async () => {
     try {
       const { data } = await healthAPI.check();
@@ -113,7 +113,7 @@ export default function DashboardPage() {
     checkHealth();
   }, [fetchTasks, fetchStats, fetchMilestones, fetchActivity, checkHealth]);
 
-  // ── Task Handlers ────────────────────────────────────────────────────────────
+  // Task actions
   const handleCreateTask = async (payload) => {
     await tasksAPI.create(payload);
     showToast('Task created successfully! 🎉');
@@ -170,7 +170,7 @@ export default function DashboardPage() {
     setEditingTask(null);
   };
 
-  // ── Milestone Handlers ───────────────────────────────────────────────────────
+  // Milestone actions
   const handleCreateMilestone = async (payload) => {
     try {
       await milestonesAPI.create(payload);
