@@ -186,10 +186,10 @@ export default function AnalyticsPanel({ analytics, loading, onRefresh }) {
             </div>
           </div>
 
-          {/* Bar Chart with Y-Axis */}
-          <div className="flex gap-4 items-end pt-2">
+          {/* Bar Chart with Y-Axis (Increased height to h-72 / 288px) */}
+          <div className="flex gap-4 items-end pt-4">
             {/* Y-Axis Labels */}
-            <div className="flex flex-col justify-between h-48 text-[11px] font-bold text-slate-400 pb-6 pr-2">
+            <div className="flex flex-col justify-between h-72 text-xs font-bold text-slate-400 pb-7 pr-2 select-none">
               <span>50</span>
               <span>40</span>
               <span>30</span>
@@ -201,7 +201,7 @@ export default function AnalyticsPanel({ analytics, loading, onRefresh }) {
             {/* Bars Canvas with Gridlines */}
             <div className="flex-1 relative">
               {/* Subtle Horizontal Gridlines */}
-              <div className="absolute inset-0 flex flex-col justify-between pointer-events-none pb-6">
+              <div className="absolute inset-0 flex flex-col justify-between pointer-events-none pb-7">
                 <div className="border-b border-slate-100 w-full" />
                 <div className="border-b border-slate-100 w-full" />
                 <div className="border-b border-slate-100 w-full" />
@@ -211,28 +211,28 @@ export default function AnalyticsPanel({ analytics, loading, onRefresh }) {
               </div>
 
               {/* 7 Grouped Columns */}
-              <div className="grid grid-cols-7 gap-2 relative h-48 pb-6 items-end">
+              <div className="grid grid-cols-7 gap-3 relative h-72 pb-7 items-end">
                 {daysData.map((d, idx) => {
                   const createdH = Math.min(100, Math.max(10, Math.round((d.created / 50) * 100)));
                   const completedH = Math.min(100, Math.max(8, Math.round((d.completed / 50) * 100)));
 
                   return (
-                    <div key={idx} className="flex flex-col items-center h-full justify-end">
-                      <div className="w-full flex items-end justify-center gap-1 h-full">
+                    <div key={idx} className="flex flex-col items-center h-full justify-end group">
+                      <div className="w-full flex items-end justify-center gap-1.5 h-full">
                         {/* Created bar */}
                         <div
-                          className="w-1/2 bg-indigo-300 rounded-t-xs transition-all hover:bg-indigo-400"
+                          className="w-1/2 bg-indigo-300 rounded-t-sm transition-all group-hover:bg-indigo-400 shadow-2xs"
                           style={{ height: `${createdH}%` }}
                           title={`Created: ${d.created}`}
                         />
                         {/* Completed bar */}
                         <div
-                          className="w-1/2 bg-[#1c2333] rounded-t-xs transition-all hover:bg-slate-800"
+                          className="w-1/2 bg-[#1c2333] rounded-t-sm transition-all group-hover:bg-slate-800 shadow-2xs"
                           style={{ height: `${completedH}%` }}
                           title={`Completed: ${d.completed}`}
                         />
                       </div>
-                      <span className="text-[11px] font-bold text-slate-600 mt-2">{d.day}</span>
+                      <span className="text-xs font-bold text-slate-600 mt-2.5">{d.day}</span>
                     </div>
                   );
                 })}

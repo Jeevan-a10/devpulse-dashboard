@@ -14,7 +14,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="bg-white border-b border-slate-200/80 shadow-xs sticky top-0 z-30">
+    <header className="bg-white sticky top-0 z-30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         {/* Left: Brand Icon + Title & Subtitle (Exact layout from Image 2) */}
         <div className="flex items-center gap-3">

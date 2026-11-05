@@ -445,51 +445,53 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Tier 2: View Controller (Tabs Bar exactly matching the mockups) */}
-      <div className="flex items-center gap-3 border-b border-slate-200/90 pb-3 overflow-x-auto">
-        <button
-          onClick={() => setActiveTab('tasks')}
-          className={`px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 whitespace-nowrap ${
-            activeTab === 'tasks'
-              ? 'bg-[#242b78] text-white shadow-xs'
-              : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/60'
-          }`}
-        >
-          <span>📋</span> Tasks & Backlog ({tasks.length})
-        </button>
+      {/* Tier 2: View Controller (Tabs Bar on seamless white background directly attached to Navbar) */}
+      <div className="-mx-4 sm:-mx-6 lg:-mx-8 -mt-6 mb-6 bg-white border-b border-slate-200/90 shadow-2xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center gap-3 overflow-x-auto">
+          <button
+            onClick={() => setActiveTab('tasks')}
+            className={`px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 whitespace-nowrap ${
+              activeTab === 'tasks'
+                ? 'bg-[#242b78] text-white shadow-xs'
+                : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <span>📋</span> Tasks & Backlog ({tasks.length})
+          </button>
 
-        <button
-          onClick={() => setActiveTab('milestones')}
-          className={`px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 whitespace-nowrap ${
-            activeTab === 'milestones'
-              ? 'bg-[#242b78] text-white shadow-xs'
-              : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/60'
-          }`}
-        >
-          <span>🎯</span> Milestones & Roadmap ({milestones.length})
-        </button>
+          <button
+            onClick={() => setActiveTab('milestones')}
+            className={`px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 whitespace-nowrap ${
+              activeTab === 'milestones'
+                ? 'bg-[#242b78] text-white shadow-xs'
+                : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <span>🎯</span> Milestones & Roadmap ({milestones.length})
+          </button>
 
-        <button
-          onClick={() => setActiveTab('activity')}
-          className={`px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 whitespace-nowrap ${
-            activeTab === 'activity'
-              ? 'bg-[#242b78] text-white shadow-xs'
-              : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/60'
-          }`}
-        >
-          <span>⚡</span> Activity Stream ({activitySummary?.actionsLast24Hours || 3} today)
-        </button>
+          <button
+            onClick={() => setActiveTab('activity')}
+            className={`px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 whitespace-nowrap ${
+              activeTab === 'activity'
+                ? 'bg-[#242b78] text-white shadow-xs'
+                : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <span>⚡</span> Activity Stream ({activitySummary?.actionsLast24Hours || 3} today)
+          </button>
 
-        <button
-          onClick={() => setActiveTab('analytics')}
-          className={`px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 whitespace-nowrap ${
-            activeTab === 'analytics'
-              ? 'bg-[#242b78] text-white shadow-xs'
-              : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/60'
-          }`}
-        >
-          <span>📊</span> Velocity & Reports
-        </button>
+          <button
+            onClick={() => setActiveTab('analytics')}
+            className={`px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 whitespace-nowrap ${
+              activeTab === 'analytics'
+                ? 'bg-[#242b78] text-white shadow-xs'
+                : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <span>📊</span> Velocity & Reports
+          </button>
+        </div>
       </div>
 
       {/* Tab Content Canvas */}
