@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { BellIcon, ChevronDownIcon } from '@/components/Icons';
+import { ChevronDownIcon } from '@/components/Icons';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -35,8 +35,8 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Right: API Online Badge + Notifications + User Profile */}
-        <div className="flex items-center gap-3 sm:gap-4">
+        {/* Right: API Online Badge + User Profile */}
+        <div className="flex items-center gap-4">
           {/* API Online Badge */}
           <div className="flex items-center gap-2 bg-emerald-50 text-emerald-700 border border-emerald-200/80 px-3.5 py-1.5 rounded-full text-xs font-bold shadow-2xs">
             <span className="relative flex h-2 w-2">
@@ -45,16 +45,6 @@ export default function Navbar() {
             </span>
             API online
           </div>
-
-          {/* Notifications Icon Button */}
-          <button
-            type="button"
-            className="relative text-slate-400 hover:text-slate-600 p-2 rounded-xl hover:bg-slate-100 transition-colors"
-            title="Notifications"
-          >
-            <BellIcon className="w-5 h-5" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-indigo-600 rounded-full ring-2 ring-white" />
-          </button>
 
           {/* User Profile */}
           {user && (
