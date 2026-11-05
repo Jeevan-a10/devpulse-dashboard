@@ -1,5 +1,9 @@
 # DevPulse Dashboard
 
+![CI Status](https://github.com/Jeevan-a10/devpulse-dashboard/actions/workflows/ci.yml/badge.svg)
+![Framework](https://img.shields.io/badge/Next.js-16.4-black)
+![UI](https://img.shields.io/badge/TailwindCSS-v4-38bdf8)
+
 Frontend dashboard for the DevPulse project and task management system. Built with Next.js 16, React, and Tailwind CSS.
 
 ## Overview
