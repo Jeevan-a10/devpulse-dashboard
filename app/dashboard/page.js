@@ -1,13 +1,14 @@
 'use client';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { tasksAPI, healthAPI, milestonesAPI, activityAPI } from '@/lib/api';
+import { tasksAPI, healthAPI, milestonesAPI, activityAPI, analyticsAPI } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import StatsPanel from '@/components/StatsPanel';
 import TaskList from '@/components/TaskList';
 import TaskForm from '@/components/TaskForm';
 import MilestonesPanel from '@/components/MilestonesPanel';
 import ActivityFeed from '@/components/ActivityFeed';
+import AnalyticsPanel from '@/components/AnalyticsPanel';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function DashboardPage() {
@@ -21,11 +22,13 @@ export default function DashboardPage() {
   const [milestones, setMilestones] = useState([]);
   const [activities, setActivities] = useState([]);
   const [activitySummary, setActivitySummary] = useState(null);
+  const [analytics, setAnalytics] = useState(null);
 
   const [tasksLoading, setTasksLoading] = useState(true);
   const [statsLoading, setStatsLoading] = useState(true);
   const [milestonesLoading, setMilestonesLoading] = useState(true);
   const [activityLoading, setActivityLoading] = useState(true);
+  const [analyticsLoading, setAnalyticsLoading] = useState(true);
 
   const [apiStatus, setApiStatus] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -106,6 +109,19 @@ export default function DashboardPage() {
     }
   }, []);
 
+  // Load analytics & velocity
+  const fetchAnalytics = useCallback(async () => {
+    setAnalyticsLoading(true);
+    try {
+      const { data } = await analyticsAPI.getVelocity();
+      setAnalytics(data.analytics || null);
+    } catch {
+      // Silently fail if endpoint offline
+    } finally {
+      setAnalyticsLoading(false);
+    }
+  }, []);
+
   // Server health check
   const checkHealth = useCallback(async () => {
     try {
@@ -121,8 +137,9 @@ export default function DashboardPage() {
     fetchStats();
     fetchMilestones();
     fetchActivity();
+    fetchAnalytics();
     checkHealth();
-  }, [fetchTasks, fetchStats, fetchMilestones, fetchActivity, checkHealth]);
+  }, [fetchTasks, fetchStats, fetchMilestones, fetchActivity, fetchAnalytics, checkHealth]);
 
   // Task actions
   const handleCreateTask = useCallback(async (payload) => {
@@ -131,7 +148,8 @@ export default function DashboardPage() {
     fetchTasks();
     fetchStats();
     fetchActivity();
-  }, [fetchTasks, fetchStats, fetchActivity]);
+    fetchAnalytics();
+  }, [fetchTasks, fetchStats, fetchActivity, fetchAnalytics]);
 
   const handleUpdateTask = useCallback(async (payload) => {
     await tasksAPI.update(editingTask._id || editingTask.id, payload);
@@ -139,7 +157,8 @@ export default function DashboardPage() {
     fetchTasks();
     fetchStats();
     fetchActivity();
-  }, [editingTask, fetchTasks, fetchStats, fetchActivity]);
+    fetchAnalytics();
+  }, [editingTask, fetchTasks, fetchStats, fetchActivity, fetchAnalytics]);
 
   const handleStatusChange = useCallback(async (id, newStatus) => {
     try {
@@ -153,10 +172,11 @@ export default function DashboardPage() {
       );
       fetchStats();
       fetchActivity();
+      fetchAnalytics();
     } catch {
       showToast('Failed to update task status.', 'error');
     }
-  }, [fetchStats, fetchActivity]);
+  }, [fetchStats, fetchActivity, fetchAnalytics]);
 
   const handleDeleteTask = useCallback(async (id) => {
     if (!confirm('Delete this task? This cannot be undone.')) return;
@@ -166,10 +186,11 @@ export default function DashboardPage() {
       showToast('Task deleted.');
       fetchStats();
       fetchActivity();
+      fetchAnalytics();
     } catch {
       showToast('Failed to delete task.', 'error');
     }
-  }, [fetchStats, fetchActivity]);
+  }, [fetchStats, fetchActivity, fetchAnalytics]);
 
   const handleEditTask = (task) => {
     setEditingTask(task);
@@ -190,10 +211,11 @@ export default function DashboardPage() {
       showToast('Milestone created! 🎯');
       fetchMilestones();
       fetchActivity();
+      fetchAnalytics();
     } catch {
       showToast('Failed to create milestone.', 'error');
     }
-  }, [fetchMilestones, fetchActivity]);
+  }, [fetchMilestones, fetchActivity, fetchAnalytics]);
 
   const handleUpdateMilestone = useCallback(async (id, payload) => {
     try {
@@ -201,10 +223,11 @@ export default function DashboardPage() {
       showToast('Milestone updated! ✅');
       fetchMilestones();
       fetchActivity();
+      fetchAnalytics();
     } catch {
       showToast('Failed to update milestone.', 'error');
     }
-  }, [fetchMilestones, fetchActivity]);
+  }, [fetchMilestones, fetchActivity, fetchAnalytics]);
 
   const handleDeleteMilestone = useCallback(async (id) => {
     if (!confirm('Delete this milestone? This cannot be undone.')) return;
@@ -212,11 +235,13 @@ export default function DashboardPage() {
       await milestonesAPI.delete(id);
       setMilestones((prev) => prev.filter((m) => (m._id || m.id) !== id));
       showToast('Milestone removed.');
+      fetchMilestones();
       fetchActivity();
+      fetchAnalytics();
     } catch {
       showToast('Failed to remove milestone.', 'error');
     }
-  }, [fetchActivity]);
+  }, [fetchMilestones, fetchActivity, fetchAnalytics]);
 
   // ── Auto Demo Playback Controller ──────────────────────────────────────────
   const stopAutoDemo = useCallback(() => {
@@ -501,6 +526,17 @@ export default function DashboardPage() {
             </span>
           )}
         </button>
+
+        <button
+          onClick={() => setActiveTab('analytics')}
+          className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors flex items-center gap-2 ${
+            activeTab === 'analytics'
+              ? 'bg-indigo-50 text-indigo-700'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+          }`}
+        >
+          <span>📊</span> Velocity & Reports
+        </button>
       </div>
 
       {/* Stats Panel */}
@@ -537,6 +573,14 @@ export default function DashboardPage() {
           summary={activitySummary}
           loading={activityLoading}
           onRefresh={fetchActivity}
+        />
+      )}
+
+      {activeTab === 'analytics' && (
+        <AnalyticsPanel
+          analytics={analytics}
+          loading={analyticsLoading}
+          onRefresh={fetchAnalytics}
         />
       )}
 

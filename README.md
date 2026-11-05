@@ -13,6 +13,9 @@ DevPulse Dashboard provides a clean interface for managing developer tasks, trac
 - **Milestone Tracking**: Visual roadmap progress bars and target completion dates.
 - **Activity Feed**: Chronological log of recent actions and team updates.
 - **Metrics Overview**: Summary statistics showing completion rate and task distribution.
+- **Engineering Velocity & Reports**: In-depth analytics covering turnaround cycle times, priority distributions, and a 7-day activity sparkline.
+- **Export Hub**: 1-click JSON full-workspace backups and RFC-compliant CSV task backlog downloads.
+- **Container Ready**: Production-optimized standalone output for lightweight Docker deployments.
 
 ## Tech Stack
 
