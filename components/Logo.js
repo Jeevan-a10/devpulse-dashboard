@@ -1,4 +1,4 @@
-export default function Logo({ size = 'md', withText = true, className = '' }) {
+export default function Logo({ size = 'md', withText = true, inverted = false, className = '' }) {
   const iconSizes = {
     sm: 'w-7 h-7',
     md: 'w-9 h-9',
@@ -45,8 +45,8 @@ export default function Logo({ size = 'md', withText = true, className = '' }) {
       </div>
 
       {withText && (
-        <span className={`font-extrabold tracking-tight text-slate-900 ${textSizes[size] || textSizes.md}`}>
-          Dev<span className="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">Pulse</span>
+        <span className={`font-extrabold tracking-tight ${inverted ? 'text-white' : 'text-slate-900'} ${textSizes[size] || textSizes.md}`}>
+          Dev<span className="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">Pulse</span>
         </span>
       )}
     </div>

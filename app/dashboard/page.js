@@ -446,9 +446,24 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">
+          <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-1">
+            <span>Workspace</span>
+            <span>/</span>
+            <span className="text-indigo-600 font-bold">
+              {isMyTasks
+                ? 'My Tasks'
+                : activeTab === 'analytics'
+                ? 'Analytics'
+                : activeTab === 'milestones'
+                ? 'Roadmap'
+                : activeTab === 'activity'
+                ? 'Activity'
+                : 'Sprint Backlog'}
+            </span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
             {isMyTasks
               ? 'My Tasks'
               : activeTab === 'analytics'
@@ -459,81 +474,92 @@ export default function DashboardPage() {
               ? 'Real-Time Activity Stream'
               : 'Developer Dashboard'}
           </h1>
-          <p className="text-sm text-slate-500 mt-0.5">
+          <p className="text-sm text-slate-500 mt-1 font-medium">
             {activeTab === 'analytics' ? (
               'Real-time cycle time, velocity metrics, and workspace backup hub'
+            ) : activeTab === 'milestones' ? (
+              'Sprint roadmap objectives, target dates, and automated progress metrics'
+            ) : activeTab === 'activity' ? (
+              'Chronological developer audit logs, event tracing, and velocity tracker'
             ) : (
-              <>Welcome back, <span className="font-semibold text-slate-700">{user?.name}</span></>
+              <>Welcome back, <span className="font-bold text-slate-800">{user?.name}</span> • Sprint v1.2</>
             )}
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-3">
           {/* API Status Badge */}
           {apiStatus && (
-            <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${
+            <div className={`text-xs font-bold px-3 py-1.5 rounded-full border shadow-xs flex items-center gap-1.5 ${
               apiStatus === 'online'
-                ? 'bg-green-50 text-green-700 border-green-200'
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                 : apiStatus === 'offline'
-                ? 'bg-red-50 text-red-600 border-red-200'
-                : 'bg-amber-50 text-amber-600 border-amber-200'
+                ? 'bg-rose-50 text-rose-700 border-rose-200'
+                : 'bg-amber-50 text-amber-700 border-amber-200'
             }`}>
-              {apiStatus === 'online' ? '🟢' : apiStatus === 'offline' ? '🔴' : '🟡'} API {apiStatus}
-            </span>
+              <span className={`w-2 h-2 rounded-full ${apiStatus === 'online' ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`} />
+              API {apiStatus.toUpperCase()}
+            </div>
           )}
 
           {/* New Task Button */}
           <button
             id="new-task-btn"
             onClick={() => { setEditingTask(null); setFormDefaultValues(null); setShowForm(true); }}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm"
+            className="bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-indigo-500/25 transition-all hover:shadow-indigo-500/40 hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2"
           >
-            + New Task
+            <span>➕</span> New Task
           </button>
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 pb-1">
+      {/* Modern Segmented Floating Pill Tabs */}
+      <div className="flex items-center gap-1.5 bg-slate-200/70 p-1.5 rounded-2xl border border-slate-300/50 shadow-inner max-w-fit overflow-x-auto">
         <button
           onClick={() => setActiveTab('tasks')}
-          className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors flex items-center gap-2 ${
+          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center gap-2 whitespace-nowrap ${
             activeTab === 'tasks'
-              ? 'bg-indigo-50 text-indigo-700'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              ? 'bg-white text-indigo-700 shadow-sm border border-slate-200/60 scale-[1.02]'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
           }`}
         >
           <span>📋</span> Tasks & Backlog
-          <span className="text-xs bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded-full ml-1">
+          <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-black ${
+            activeTab === 'tasks' ? 'bg-indigo-50 text-indigo-700' : 'bg-slate-300/60 text-slate-700'
+          }`}>
             {tasks.length}
           </span>
         </button>
 
         <button
           onClick={() => setActiveTab('milestones')}
-          className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors flex items-center gap-2 ${
+          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center gap-2 whitespace-nowrap ${
             activeTab === 'milestones'
-              ? 'bg-indigo-50 text-indigo-700'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              ? 'bg-white text-indigo-700 shadow-sm border border-slate-200/60 scale-[1.02]'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
           }`}
         >
           <span>🎯</span> Milestones & Roadmap
-          <span className="text-xs bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded-full ml-1">
+          <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-black ${
+            activeTab === 'milestones' ? 'bg-indigo-50 text-indigo-700' : 'bg-slate-300/60 text-slate-700'
+          }`}>
             {milestones.length}
           </span>
         </button>
 
         <button
           onClick={() => setActiveTab('activity')}
-          className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors flex items-center gap-2 ${
+          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center gap-2 whitespace-nowrap ${
             activeTab === 'activity'
-              ? 'bg-indigo-50 text-indigo-700'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              ? 'bg-white text-indigo-700 shadow-sm border border-slate-200/60 scale-[1.02]'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
           }`}
         >
           <span>⚡</span> Activity Stream
           {activitySummary?.actionsLast24Hours > 0 && (
-            <span className="text-xs bg-indigo-100 text-indigo-700 font-bold px-1.5 py-0.5 rounded-full ml-1">
+            <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-black ${
+              activeTab === 'activity' ? 'bg-indigo-50 text-indigo-700' : 'bg-indigo-100 text-indigo-700'
+            }`}>
               {activitySummary.actionsLast24Hours} today
             </span>
           )}
@@ -541,10 +567,10 @@ export default function DashboardPage() {
 
         <button
           onClick={() => setActiveTab('analytics')}
-          className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors flex items-center gap-2 ${
+          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center gap-2 whitespace-nowrap ${
             activeTab === 'analytics'
-              ? 'bg-indigo-50 text-indigo-700'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              ? 'bg-white text-indigo-700 shadow-sm border border-slate-200/60 scale-[1.02]'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
           }`}
         >
           <span>📊</span> Velocity & Reports
