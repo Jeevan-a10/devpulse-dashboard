@@ -449,10 +449,22 @@ export default function DashboardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-slate-800">
-            {isMyTasks ? 'My Tasks' : 'Developer Dashboard'}
+            {isMyTasks
+              ? 'My Tasks'
+              : activeTab === 'analytics'
+              ? 'Velocity & Engineering Reports'
+              : activeTab === 'milestones'
+              ? 'Roadmap & Sprint Milestones'
+              : activeTab === 'activity'
+              ? 'Real-Time Activity Stream'
+              : 'Developer Dashboard'}
           </h1>
           <p className="text-sm text-slate-500 mt-0.5">
-            Welcome back, <span className="font-semibold text-slate-700">{user?.name}</span>
+            {activeTab === 'analytics' ? (
+              'Real-time cycle time, velocity metrics, and workspace backup hub'
+            ) : (
+              <>Welcome back, <span className="font-semibold text-slate-700">{user?.name}</span></>
+            )}
           </p>
         </div>
 

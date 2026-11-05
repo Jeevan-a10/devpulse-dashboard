@@ -72,38 +72,38 @@ export default function AnalyticsPanel({ analytics, loading, onRefresh }) {
       {/* Overview Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Velocity Rating */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+        <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-sm hover:shadow transition-shadow">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-              Velocity Rating
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+              <span>⚡</span> Velocity Rating
             </span>
-            <span className={`text-xs px-2.5 py-0.5 rounded-full font-bold uppercase ${RATING_COLORS[overview?.throughputRating] || RATING_COLORS.steady}`}>
+            <span className={`text-xs px-2.5 py-0.5 rounded-full font-bold uppercase shadow-xs ${RATING_COLORS[overview?.throughputRating] || RATING_COLORS.steady}`}>
               {overview?.throughputRating || 'steady'}
             </span>
           </div>
           <div className="mt-3">
-            <p className="text-2xl font-bold text-slate-900">
+            <p className="text-3xl font-extrabold text-slate-900 tracking-tight">
               {weeklySummary?.totalWeeklyActions || 0}
             </p>
-            <p className="text-xs text-slate-500 mt-0.5">Actions logged this week</p>
+            <p className="text-xs text-slate-500 mt-1 font-medium">Actions logged this week</p>
           </div>
         </div>
 
         {/* Completion Rate */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-            Task Completion Rate
-          </span>
+        <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-sm hover:shadow transition-shadow">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+              <span>🎯</span> Completion Rate
+            </span>
+            <span className="text-xs text-slate-500 font-semibold">
+              {overview?.completedTasks}/{overview?.totalTasks} tasks
+            </span>
+          </div>
           <div className="mt-3">
-            <div className="flex items-baseline justify-between">
-              <p className="text-2xl font-bold text-slate-900">{overview?.completionRate || '0%'}</p>
-              <span className="text-xs text-slate-500">
-                {overview?.completedTasks}/{overview?.totalTasks} tasks
-              </span>
-            </div>
-            <div className="w-full bg-slate-100 rounded-full h-2 mt-2 overflow-hidden">
+            <p className="text-3xl font-extrabold text-slate-900 tracking-tight">{overview?.completionRate || '0%'}</p>
+            <div className="w-full bg-slate-100 rounded-full h-2 mt-2.5 overflow-hidden">
               <div
-                className="bg-indigo-600 h-2 rounded-full transition-all duration-500"
+                className="bg-indigo-600 h-2 rounded-full transition-all duration-500 shadow-xs"
                 style={{ width: overview?.completionRate || '0%' }}
               />
             </div>
@@ -111,33 +111,33 @@ export default function AnalyticsPanel({ analytics, loading, onRefresh }) {
         </div>
 
         {/* Average Cycle Time */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-            Avg Turnaround Time
+        <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-sm hover:shadow transition-shadow">
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+            <span>⏱️</span> Avg Turnaround
           </span>
           <div className="mt-3">
-            <p className="text-2xl font-bold text-slate-900">
-              {overview?.averageCycleTimeHours || 0} <span className="text-sm font-normal text-slate-500">hrs</span>
+            <p className="text-3xl font-extrabold text-slate-900 tracking-tight">
+              {overview?.averageCycleTimeHours || 0} <span className="text-base font-semibold text-slate-500">hrs</span>
             </p>
-            <p className="text-xs text-slate-500 mt-0.5">From creation to completion</p>
+            <p className="text-xs text-slate-500 mt-1 font-medium">From creation to completion</p>
           </div>
         </div>
 
         {/* Milestone Delivery */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-            Milestones Progress
-          </span>
+        <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-sm hover:shadow transition-shadow">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+              <span>🏆</span> Milestones
+            </span>
+            <span className="text-xs text-slate-500 font-semibold">
+              {milestones?.completed}/{milestones?.total} achieved
+            </span>
+          </div>
           <div className="mt-3">
-            <div className="flex items-baseline justify-between">
-              <p className="text-2xl font-bold text-slate-900">{milestones?.averageProgress || '0%'}</p>
-              <span className="text-xs text-slate-500">
-                {milestones?.completed}/{milestones?.total} achieved
-              </span>
-            </div>
-            <div className="w-full bg-slate-100 rounded-full h-2 mt-2 overflow-hidden">
+            <p className="text-3xl font-extrabold text-slate-900 tracking-tight">{milestones?.averageProgress || '0%'}</p>
+            <div className="w-full bg-slate-100 rounded-full h-2 mt-2.5 overflow-hidden">
               <div
-                className="bg-emerald-500 h-2 rounded-full transition-all duration-500"
+                className="bg-emerald-500 h-2 rounded-full transition-all duration-500 shadow-xs"
                 style={{ width: milestones?.averageProgress || '0%' }}
               />
             </div>
