@@ -539,8 +539,8 @@ export default function DashboardPage() {
         </button>
       </div>
 
-      {/* Stats Panel */}
-      {!isMyTasks && (
+      {/* Stats Panel - only on tasks tab */}
+      {!isMyTasks && activeTab === 'tasks' && (
         statsLoading
           ? <div className="py-2"><LoadingSpinner text="Loading stats..." /></div>
           : <StatsPanel stats={stats} />
