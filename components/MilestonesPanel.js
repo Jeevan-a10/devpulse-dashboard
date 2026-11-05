@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { PlusIcon, TargetIcon, CheckIcon, RefreshIcon, TrashIcon } from '@/components/Icons';
 
 export default function MilestonesPanel({
   milestones = [],
@@ -79,9 +80,10 @@ export default function MilestonesPanel({
         {/* Add Milestone Button */}
         <button
           onClick={() => setShowAddModal(true)}
-          className="bg-[#3b49df] hover:bg-[#2f3cb5] text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs whitespace-nowrap self-stretch md:self-auto flex items-center justify-center gap-1.5"
+          className="bg-[#3b49df] hover:bg-[#2f3cb5] text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs whitespace-nowrap self-stretch md:self-auto flex items-center justify-center gap-2"
         >
-          <span>➕</span> New Milestone
+          <PlusIcon className="w-4 h-4" />
+          <span>New Milestone</span>
         </button>
       </div>
 
@@ -90,8 +92,10 @@ export default function MilestonesPanel({
         <div className="py-12 text-center text-sm text-slate-400">Loading roadmap milestones...</div>
       ) : milestones.length === 0 ? (
         <div className="text-center py-16 bg-white border border-slate-200/90 rounded-2xl shadow-xs">
-          <p className="text-3xl mb-2">🎯</p>
-          <p className="text-slate-600 font-bold">No milestones created yet</p>
+          <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600">
+            <TargetIcon className="w-6 h-6" />
+          </div>
+          <p className="text-slate-700 font-bold">No milestones created yet</p>
           <p className="text-xs text-slate-400 mt-1">Click "+ New Milestone" above to define your sprint objectives</p>
         </div>
       ) : (
@@ -164,20 +168,31 @@ export default function MilestonesPanel({
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleToggleComplete(m)}
-                      className={`text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors ${
+                      className={`text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1.5 ${
                         isCompleted
-                          ? 'text-slate-500 hover:text-slate-700'
+                          ? 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
                           : 'text-emerald-700 hover:bg-emerald-50'
                       }`}
                     >
-                      {isCompleted ? '↺ Reopen' : '✓ Done'}
+                      {isCompleted ? (
+                        <>
+                          <RefreshIcon className="w-3.5 h-3.5" />
+                          <span>Reopen</span>
+                        </>
+                      ) : (
+                        <>
+                          <CheckIcon className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>Done</span>
+                        </>
+                      )}
                     </button>
                     {onDeleteMilestone && (
                       <button
                         onClick={() => onDeleteMilestone(id)}
-                        className="text-xs text-slate-400 hover:text-rose-500 transition-colors"
+                        className="text-xs text-slate-400 hover:text-rose-500 p-1 rounded-md transition-colors"
+                        title="Delete milestone"
                       >
-                        Delete
+                        <TrashIcon className="w-3.5 h-3.5" />
                       </button>
                     )}
                   </div>

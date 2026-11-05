@@ -2,6 +2,15 @@
 import { useState } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 import { exportAPI } from '@/lib/api';
+import {
+  DatabaseIcon,
+  DownloadIcon,
+  FileSpreadsheetIcon,
+  LightningIcon,
+  CheckCircleIcon,
+  ClockIcon,
+  TargetIcon,
+} from '@/components/Icons';
 
 export default function AnalyticsPanel({ analytics, loading, onRefresh }) {
   const [downloading, setDownloading] = useState(null);
@@ -86,7 +95,8 @@ export default function AnalyticsPanel({ analytics, loading, onRefresh }) {
         {/* Card 1: Velocity Rating */}
         <div className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+              <LightningIcon className="w-3.5 h-3.5 text-emerald-500" />
               VELOCITY RATING
             </span>
             <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200/60 uppercase">
@@ -106,7 +116,8 @@ export default function AnalyticsPanel({ analytics, loading, onRefresh }) {
         {/* Card 2: Task Completion Rate */}
         <div className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+              <CheckCircleIcon className="w-3.5 h-3.5 text-indigo-500" />
               TASK COMPLETION RATE
             </span>
           </div>
@@ -129,7 +140,8 @@ export default function AnalyticsPanel({ analytics, loading, onRefresh }) {
         {/* Card 3: Avg Turnaround Time */}
         <div className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+              <ClockIcon className="w-3.5 h-3.5 text-slate-400" />
               AVG TURNAROUND TIME
             </span>
           </div>
@@ -146,7 +158,8 @@ export default function AnalyticsPanel({ analytics, loading, onRefresh }) {
         {/* Card 4: Milestones Progress */}
         <div className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+              <TargetIcon className="w-3.5 h-3.5 text-cyan-500" />
               MILESTONES PROGRESS
             </span>
           </div>
@@ -278,7 +291,7 @@ export default function AnalyticsPanel({ analytics, loading, onRefresh }) {
           {/* Workspace Backup & Export Hub (Exact dark navy card) */}
           <div className="bg-[#1c2333] text-white p-6 rounded-2xl shadow-xs space-y-3">
             <div className="flex items-center gap-2">
-              <span className="text-base">📦</span>
+              <DatabaseIcon className="w-5 h-5 text-indigo-400" />
               <h3 className="text-sm font-extrabold">Workspace Backup & Export Hub</h3>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed font-normal">
@@ -291,8 +304,8 @@ export default function AnalyticsPanel({ analytics, loading, onRefresh }) {
                 disabled={downloading !== null}
                 className="bg-[#3b49df] hover:bg-[#2d39b8] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-xs disabled:opacity-50"
               >
-                <span>💾</span>
-                {downloading === 'json' ? 'Exporting...' : 'Export JSON Backup'}
+                <DownloadIcon className="w-4 h-4 text-white" />
+                <span>{downloading === 'json' ? 'Exporting...' : 'Export JSON Backup'}</span>
               </button>
 
               <button
@@ -300,8 +313,8 @@ export default function AnalyticsPanel({ analytics, loading, onRefresh }) {
                 disabled={downloading !== null}
                 className="border border-slate-600 hover:bg-slate-800 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-xs disabled:opacity-50"
               >
-                <span>📊</span>
-                {downloading === 'csv' ? 'Generating...' : 'Export Tasks CSV'}
+                <FileSpreadsheetIcon className="w-4 h-4 text-slate-300" />
+                <span>{downloading === 'csv' ? 'Generating...' : 'Export Tasks CSV'}</span>
               </button>
             </div>
           </div>

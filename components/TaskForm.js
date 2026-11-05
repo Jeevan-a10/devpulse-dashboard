@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { EditIcon, PlusIcon } from '@/components/Icons';
 
 const CATEGORIES = ['Dev', 'Backend', 'Frontend', 'DevOps', 'Architecture', 'Testing', 'General'];
 const STATUSES = ['pending', 'in-progress', 'completed'];
@@ -79,14 +80,27 @@ export default function TaskForm({ onSubmit, onClose, initialData = null, defaul
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg animate-in fade-in slide-in-from-bottom-4 duration-200">
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-slate-100">
-          <h2 className="text-lg font-bold text-slate-800">
-            {initialData ? '✏️ Edit Task' : '➕ New Task'}
+          <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+            {initialData ? (
+              <>
+                <EditIcon className="w-5 h-5 text-indigo-600" />
+                <span>Edit Task</span>
+              </>
+            ) : (
+              <>
+                <PlusIcon className="w-5 h-5 text-indigo-600" />
+                <span>New Task</span>
+              </>
+            )}
           </h2>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-700 text-xl leading-none transition-colors"
+            className="text-slate-400 hover:text-slate-700 p-1 rounded-lg hover:bg-slate-100 transition-colors"
+            title="Close"
           >
-            ✕
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
 

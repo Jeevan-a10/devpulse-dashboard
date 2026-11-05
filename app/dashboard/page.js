@@ -10,6 +10,7 @@ import MilestonesPanel from '@/components/MilestonesPanel';
 import ActivityFeed from '@/components/ActivityFeed';
 import AnalyticsPanel from '@/components/AnalyticsPanel';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { TasksTabIcon, MilestonesTabIcon, ActivityTabIcon, VelocityTabIcon } from '@/components/Icons';
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -456,7 +457,8 @@ export default function DashboardPage() {
                 : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <span>📋</span> Tasks & Backlog ({tasks.length})
+            <TasksTabIcon className="w-4 h-4 text-inherit" />
+            <span>Tasks & Backlog ({tasks.length})</span>
           </button>
 
           <button
@@ -467,7 +469,8 @@ export default function DashboardPage() {
                 : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <span>🎯</span> Milestones & Roadmap ({milestones.length})
+            <MilestonesTabIcon className="w-4 h-4 text-inherit" />
+            <span>Milestones & Roadmap ({milestones.length})</span>
           </button>
 
           <button
@@ -478,7 +481,8 @@ export default function DashboardPage() {
                 : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <span>⚡</span> Activity Stream ({activitySummary?.actionsLast24Hours || 3} today)
+            <ActivityTabIcon className="w-4 h-4 text-inherit" />
+            <span>Activity Stream ({activitySummary?.actionsLast24Hours || 3} today)</span>
           </button>
 
           <button
@@ -489,7 +493,8 @@ export default function DashboardPage() {
                 : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <span>📊</span> Velocity & Reports
+            <VelocityTabIcon className="w-4 h-4 text-inherit" />
+            <span>Velocity & Reports</span>
           </button>
         </div>
       </div>
