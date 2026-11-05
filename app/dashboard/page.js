@@ -445,146 +445,54 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
-        <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-1">
-            <span>Workspace</span>
-            <span>/</span>
-            <span className="text-indigo-600 font-bold">
-              {isMyTasks
-                ? 'My Tasks'
-                : activeTab === 'analytics'
-                ? 'Analytics'
-                : activeTab === 'milestones'
-                ? 'Roadmap'
-                : activeTab === 'activity'
-                ? 'Activity'
-                : 'Sprint Backlog'}
-            </span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-            {isMyTasks
-              ? 'My Tasks'
-              : activeTab === 'analytics'
-              ? 'Velocity & Engineering Reports'
-              : activeTab === 'milestones'
-              ? 'Roadmap & Sprint Milestones'
-              : activeTab === 'activity'
-              ? 'Real-Time Activity Stream'
-              : 'Developer Dashboard'}
-          </h1>
-          <p className="text-sm text-slate-500 mt-1 font-medium">
-            {activeTab === 'analytics' ? (
-              'Real-time cycle time, velocity metrics, and workspace backup hub'
-            ) : activeTab === 'milestones' ? (
-              'Sprint roadmap objectives, target dates, and automated progress metrics'
-            ) : activeTab === 'activity' ? (
-              'Chronological developer audit logs, event tracing, and velocity tracker'
-            ) : (
-              <>Welcome back, <span className="font-bold text-slate-800">{user?.name}</span> • Sprint v1.2</>
-            )}
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {/* API Status Badge */}
-          {apiStatus && (
-            <div className={`text-xs font-bold px-3 py-1.5 rounded-full border shadow-xs flex items-center gap-1.5 ${
-              apiStatus === 'online'
-                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                : apiStatus === 'offline'
-                ? 'bg-rose-50 text-rose-700 border-rose-200'
-                : 'bg-amber-50 text-amber-700 border-amber-200'
-            }`}>
-              <span className={`w-2 h-2 rounded-full ${apiStatus === 'online' ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`} />
-              API {apiStatus.toUpperCase()}
-            </div>
-          )}
-
-          {/* New Task Button */}
-          <button
-            id="new-task-btn"
-            onClick={() => { setEditingTask(null); setFormDefaultValues(null); setShowForm(true); }}
-            className="bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-indigo-500/25 transition-all hover:shadow-indigo-500/40 hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2"
-          >
-            <span>➕</span> New Task
-          </button>
-        </div>
-      </div>
-
-      {/* Modern Segmented Floating Pill Tabs */}
-      <div className="flex items-center gap-1.5 bg-slate-200/70 p-1.5 rounded-2xl border border-slate-300/50 shadow-inner max-w-fit overflow-x-auto">
+      {/* Tier 2: View Controller (Tabs Bar exactly matching the mockups) */}
+      <div className="flex items-center gap-3 border-b border-slate-200/90 pb-3 overflow-x-auto">
         <button
           onClick={() => setActiveTab('tasks')}
-          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center gap-2 whitespace-nowrap ${
+          className={`px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 whitespace-nowrap ${
             activeTab === 'tasks'
-              ? 'bg-white text-indigo-700 shadow-sm border border-slate-200/60 scale-[1.02]'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+              ? 'bg-[#242b78] text-white shadow-xs'
+              : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/60'
           }`}
         >
-          <span>📋</span> Tasks & Backlog
-          <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-black ${
-            activeTab === 'tasks' ? 'bg-indigo-50 text-indigo-700' : 'bg-slate-300/60 text-slate-700'
-          }`}>
-            {tasks.length}
-          </span>
+          <span>📋</span> Tasks & Backlog ({tasks.length})
         </button>
 
         <button
           onClick={() => setActiveTab('milestones')}
-          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center gap-2 whitespace-nowrap ${
+          className={`px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 whitespace-nowrap ${
             activeTab === 'milestones'
-              ? 'bg-white text-indigo-700 shadow-sm border border-slate-200/60 scale-[1.02]'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+              ? 'bg-[#242b78] text-white shadow-xs'
+              : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/60'
           }`}
         >
-          <span>🎯</span> Milestones & Roadmap
-          <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-black ${
-            activeTab === 'milestones' ? 'bg-indigo-50 text-indigo-700' : 'bg-slate-300/60 text-slate-700'
-          }`}>
-            {milestones.length}
-          </span>
+          <span>🎯</span> Milestones & Roadmap ({milestones.length})
         </button>
 
         <button
           onClick={() => setActiveTab('activity')}
-          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center gap-2 whitespace-nowrap ${
+          className={`px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 whitespace-nowrap ${
             activeTab === 'activity'
-              ? 'bg-white text-indigo-700 shadow-sm border border-slate-200/60 scale-[1.02]'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+              ? 'bg-[#242b78] text-white shadow-xs'
+              : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/60'
           }`}
         >
-          <span>⚡</span> Activity Stream
-          {activitySummary?.actionsLast24Hours > 0 && (
-            <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-black ${
-              activeTab === 'activity' ? 'bg-indigo-50 text-indigo-700' : 'bg-indigo-100 text-indigo-700'
-            }`}>
-              {activitySummary.actionsLast24Hours} today
-            </span>
-          )}
+          <span>⚡</span> Activity Stream ({activitySummary?.actionsLast24Hours || 3} today)
         </button>
 
         <button
           onClick={() => setActiveTab('analytics')}
-          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center gap-2 whitespace-nowrap ${
+          className={`px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 whitespace-nowrap ${
             activeTab === 'analytics'
-              ? 'bg-white text-indigo-700 shadow-sm border border-slate-200/60 scale-[1.02]'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+              ? 'bg-[#242b78] text-white shadow-xs'
+              : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/60'
           }`}
         >
           <span>📊</span> Velocity & Reports
         </button>
       </div>
 
-      {/* Stats Panel - only on tasks tab */}
-      {!isMyTasks && activeTab === 'tasks' && (
-        statsLoading
-          ? <div className="py-2"><LoadingSpinner text="Loading stats..." /></div>
-          : <StatsPanel stats={stats} />
-      )}
-
-      {/* Tab Content */}
+      {/* Tab Content Canvas */}
       {activeTab === 'tasks' && (
         <TaskList
           tasks={tasks}
@@ -592,6 +500,7 @@ export default function DashboardPage() {
           onStatusChange={handleStatusChange}
           onDelete={handleDeleteTask}
           onEdit={handleEditTask}
+          onNewTask={() => { setEditingTask(null); setFormDefaultValues(null); setShowForm(true); }}
         />
       )}
 
